@@ -1,0 +1,97 @@
+Statistics
+
+A/B Testing:
+A/B testing is a method of comparing two versions of something (Version A and Version B) to see which performs better.
+Users are randomly split into two groups
+Group A sees version A (control)
+Group B sees version B (variation)
+Performance is measured using a metric (e.g., clicks, conversions)
+Purpose: to make data-driven decisions and improve outcomes.
+Example:
+Testing two webpage headlines to see which gets more sign-ups.
+
+
+Mean, median, mode:
+Mean - avg 
+- used in descriptive analysis to get to know average behaviour of a dataset
+- in predictive modelling many ml algos assume that data is normally distributed around mean
+- data cleaning - mean is used to handle missing values in some techniques
+
+Median - middle value of a dataset when data points are ordered from smallest to largest(in case of odd number of points), in case of even no of pts it is avg of middle 2 values
+- median is less sensitive to outliers - it is used when dataset has outliers that can skew mean
+- skewed distributions - not symmetrically distributed - more accurate measure of central tendency than mean
+- robustness - for data that's not normally distributed, the median is often a more reliable measure of the centwr of the data
+
+Mode - most frequently appeared value in a dataset
+- one mode(unimodal), more than one mode(bimodal/multimodal), no mode(if all valuesa re unique)
+- categorical data - to identify most common category or value(most frequent customer complaint)
+- data cleaning - idtifying most common missing value in categorical data or choosing replacement value for missing entries
+- market research - in consumer surveys, mode can be used to identify most common prefereences or behaviours
+
+
+Normal distributions: type of probability distribution that describes how data values are spread around central value
+- bell shaped curve
+- symm abt mean
+
+Central tendency: measures that describe the center or typical value of a dataset (mean, median, mode)
+
+
+Causal inference:
+Process of finding out whether changing one thing directly causes a change in another thing
+
+Correlation: Things happen together
+Causal inference: One thing makes the other happen
+
+
+You said:
+a/b testing give in brief
+ChatGPT said:
+A/B testing is a method of comparing two versions of something (Version A and Version B) to see which performs better.
+
+Users are randomly split into two groups
+
+Group A sees version A (control)
+
+Group B sees version B (variation)
+
+Performance is measured using a metric (e.g., clicks, conversions)
+
+Purpose: to make data-driven decisions and improve outcomes.
+
+Example:
+Testing two webpage headlines to see which gets more sign-ups.
+
+You said:
+causal inference expalined with some examples for microsoft data scientist interview
+ChatGPT said:
+Here’s a clear, interview-ready explanation of causal inference, tailored for a Microsoft Data Scientist interview—concise, structured, and with practical examples.
+
+What is Causal Inference?
+Causal inference is the process of determining whether a change in one variable causes a change in another, not just whether they are correlated.
+
+Correlation answers: “What is associated?”
+Causal inference answers: “What would happen if we intervened?”
+
+Why Causal Inference Matters at Microsoft:
+Microsoft products (Ads, Azure, Teams, Office, Bing) rely on decisions like:
+Does a new feature cause higher engagement?
+Does changing pricing cause more revenue?
+Does showing an ad cause more conversions?
+Incorrect causal conclusions can lead to costly product decisions.
+Key Concept: Counterfactual
+Causal inference asks:
+What would have happened to the same user if they had NOT received the treatment?
+Since we can’t observe both outcomes, we use experiments or statistical methods.
+
+Example: A/B Testing (Randomized Experiment)
+Scenario: Microsoft Teams tests a new notification design.
+Treatment group: New design
+Control group: Old design
+Metric: Daily active users
+Because users are randomly assigned, differences in outcomes can be causally attributed to the design.
+
+
+
+
+
+
