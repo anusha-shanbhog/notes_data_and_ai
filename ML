@@ -1,0 +1,167 @@
+ML
+
+Predictive modelling:
+Predictive modeling builds a mathematical model from past data to estimate the probability or value of a future event.
+
+Common Types of Predictive Models:
+Regression → predicts a continuous value
+Example: Forecasting sales
+
+Classification → predicts a category
+Example: Will a user churn? Yes/No
+
+Time series models → predicts future values over time
+Example: Daily demand forecasting
+
+
+Feature engineering is the process of creating, transforming, and selecting input variables (features) so that a model can learn patterns more effectively.
+
+1. Feature Creation
+
+What it means:
+Create new features from existing data that better describe the problem.
+
+In simple words:
+Instead of using raw numbers, we combine them to get more meaningful information.
+
+Examples:
+
+Ratio:
+conversion_rate = clicks / impressions
+→ tells us efficiency, not just volume
+
+Difference:
+price_discount = original_price − sale_price
+
+Aggregate:
+avg_monthly_sales from daily sales
+
+2. Feature Transformation
+
+What it means:
+Change the scale or shape of data so models can learn better.
+
+a) Scaling
+
+In simple words:
+Put all numbers on a similar scale.
+
+Example:
+Salary (₹10,000–₹1,000,000) vs age (18–60)
+→ scaling prevents salary from dominating the model.
+
+Standardization: mean = 0, std = 1
+
+Normalization: values between 0 and 1
+
+b) Log or Box-Cox Transform
+
+In simple words:
+Shrink very large values and reduce skewness.
+
+Example:
+Income data is usually skewed
+→ applying log makes patterns clearer and easier to model.
+
+c) Binning Continuous Variables
+
+In simple words:
+Convert numbers into categories or ranges.
+
+Example:
+Age →
+
+0–18 = Child
+
+19–60 = Adult
+
+60+ = Senior
+
+This can make patterns simpler and reduce noise.
+
+3. Encoding Categorical Variables
+
+What it means:
+Convert text categories into numbers because models only understand numbers.
+
+In simple words:
+Turn words into numeric form.
+
+Examples:
+
+One-hot encoding:
+Color = {Red, Blue, Green}
+→ Red = (1,0,0), Blue = (0,1,0)
+
+Label encoding:
+Small = 1, Medium = 2, Large = 3
+
+1. Handling Missing Values
+What it means
+
+Missing values are empty or null entries in your dataset. Most models cannot handle missing values directly, so we need to deal with them.
+
+Simple ways to handle them
+Use mean/median/mode for numeric features
+
+Use most frequent category for categorical features
+
+Indicator variable:
+
+Create a new feature: “was value missing?” (1 if missing, 0 if not)
+
+Dropping rows/columns:
+
+Only if missingness is rare
+
+Example
+
+Feature: Age = [25, 30, null, 22]
+
+Fill missing with median → [25, 30, 25, 22]
+
+2. Feature Selection
+What it means
+
+Not all features are useful; some may add noise or redundancy. Feature selection keeps only the important features.
+
+Why it’s important
+
+Improves model accuracy
+
+Reduces overfitting
+
+Speeds up training
+
+Simple methods
+
+Filter methods: correlation with target, variance threshold
+
+Wrapper methods: recursive feature elimination (RFE)
+
+Embedded methods: Lasso (L1 regularization) selects features automatically
+
+Example
+
+Predicting house prices:
+Keep square_feet, location, number_of_bedrooms; drop owner_name, zip_code if they add no predictive value.
+
+3. Time-Series Feature Engineering
+What it means
+
+Create features from temporal patterns to help models predict future values.
+
+Common techniques
+
+Lag features: past values as input
+Example: yesterday’s sales → predict today’s sales
+
+Rolling statistics: moving average, moving std
+Example: 7-day avg sales
+
+Seasonal indicators: day of week, month, holiday flag
+Example: December → holiday season
+
+Why it’s important
+
+Time-series models benefit from capturing trends, seasonality, and past behavior.
