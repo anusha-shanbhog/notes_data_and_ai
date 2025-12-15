@@ -1,0 +1,180 @@
+Fabirc, powerbi, Semantic modelling notes:
+
+•	Store delta table in onelake in fabric(it supports files and tables) or through lakehouse sql endpoint
+•	direct lake is used to connect fabric to powerbi
+•	no import is needed(import puts the data in pbix)
+•	direct query links to external data source(slower, but better for large amount of data)
+
+power query uses m language for etl transformations like cleaning, removing duplicates, null values, adding columns, merging tables etc.
+Dax is used for sum, ytd, calculate, average, distinctcount and other functions - that are needed for the reporting and visualization part later
+
+Types of visualizations: 
+•	Pie chart: contributions of diff categories
+•	Line chart: sales trend over time
+•	bar chart: sales based on category, region etc.
+
+Data modelling is the process of organizing data into tables(facts(like sales, transactions which have quantifyable metrics) and dimensions(have descriptions like product table, item information table etc.)) and creating relationships so that powerbi can perform accurate analysis and fast reporting. Star schema is used, correct cardinality(1:1, 1:m, m:m) is applied and efficient dax calculations are done
+
+why star schema is recommended: improves performance, reduces complexity, compresses data better, and works best with DAX
+
+
+
+
+Concepts to understand:
+•	Date table
+•	Snowflake schema
+•	Entire end to end flow
+•	Semantic vs Data modelling
+•	Filter context vs Row context
+•	Watch a video to get end to end practical understanding
+
+Year to Date (YTD) totals refer to the cumulative totals from the beginning of the year up to the current date.
+
+DAX: Formula language for calculations
+•	Calculated cols are stored in model and it increases size
+•	Measures are calculated during query time
+
+Imp functions:
+Aggregation functions are mathematical functions that process multiple values to produce a single summary statistic
+The GROUP BY clause groups rows with the same value into one group or bucket. This is often used in conjunction with aggregate functions like COUNT(), MAX(), MIN(), SUM(), and AVG() to perform calculations on each group.
+
+1️⃣ Aggregation Functions
+•	SUM() → Adds values
+•	AVERAGE() → Calculates average
+•	COUNT() / DISTINCTCOUNT() → Count rows / unique values
+•	MIN(), MAX() → Minimum & maximum
+
+2️⃣ Filtering Functions
+
+•	CALCULATE() → Changes filter context (most important in DAX)
+•	FILTER() → Apply row-level filters
+•	ALL() → Removes filters
+•	ALLEXCEPT() → Remove filters except given columns
+•	VALUES() → Returns distinct values
+•	KEEPFILTERS() → Keeps existing filters while adding new ones
+
+3️⃣ Time Intelligence
+
+•	DATEADD() → Shift dates by year/month/day
+•	SAMEPERIODLASTYEAR() → Compare YoY
+•	TOTALYTD(), TOTALMTD(), TOTALQTD() → Year/Month/Quarter to date
+•	PARALLELPERIOD() → Compare across periods
+
+4️⃣ Logical Functions
+
+•	IF() → Basic conditional
+•	SWITCH() → Multiple conditions (cleaner than IF)
+•	AND(), OR(), NOT() → Logical checks
+•	ISBLANK() → Check empty values
+
+5️⃣ Text Functions
+
+•	CONCATENATE() or & → Join strings
+•	LEFT(), RIGHT(), MID() → Extract text
+•	UPPER(), LOWER() → Change case
+•	TRIM() → Remove spaces
+
+6️⃣ Table Functions
+
+•	SUMMARIZE() → Group by table
+•	ADDCOLUMNS() → Add calculated column to a table
+•	CROSSJOIN() → Cartesian join
+•	RELATED() / RELATEDTABLE() → Use relationships
+
+
+Electronics Sales =
+CALCULATE(
+    SUM(Sales[Amount]),
+    FILTER(Sales, Sales[Category] = "Electronics")
+)
+
+
+Sales Same Month LY =
+CALCULATE(
+    SUM(Sales[Amount]),
+    SAMEPERIODLASTYEAR(Sales[Date])
+)
+If the visual is showing Jan 2025, this returns Jan 2024 sales.
+
+Sales Last Month =
+CALCULATE(
+    SUM(Sales[Amount]),
+    DATEADD(Sales[Date], -1, MONTH)
+)
+Returns sales for the previous month.
+
+Sales YTD =
+TOTALYTD(
+    SUM(Sales[Amount]),
+    Sales[Date]
+)
+Returns cumulative sales from 1 Jan → today.
+
+Similarly QuatertoDate, MonthtoDate
+
+DateTable is a dimension table and it is required for time intelligence functions. using foreign key, you can link it to fact table
+
+Examples of M query:
+= Table.RenameColumns(Source, {{"OldName", "NewName"}})
+= Table.TransformColumnTypes(Source, {{"Sales", Int64.Type}, {"Date", DateType}})
+= Table.SelectRows(Source, each [Sales] > 1000)
+= Table.RemoveColumns(Source, {"Column1", "Column2"})
+= Table.AddColumn(Source, "Total", each [Quantity] * [Price])
+= Table.ReplaceValue(Source, "NA", null, Replacer.ReplaceValue, {"Region"})
+= Table.Distinct(Source)
+
+
+Flow:
+Fabric has Delta tables(with facts and dimensions) -> Connect to powerbi using Direct Lake -> Do data modelling (define relationships,keys, datetable etc) -> write dax measures(Step 4 — Write DAX Measures - Aggregations, Time intelligence, KPI logic) -> build dashboards and reports
+
+
+Power BI Report is a multi-page, detailed, interactive analysis built on a single dataset in Power BI Desktop.
+Power BI Dashboard is a single-page summary view created in Power BI Service that can combine visuals from multiple reports/datasets for quick KPI monitoring.
+
+A measure is a dynamic DAX calculation (e.g., SUM, COUNT, CALCULATE) that evaluates at query time.
+Measures are recommended for all aggregations because they respond to filters and slicers.
+
+Cardinality: 
+1:m is common – one row in dimension table appears in many rows in fact table
+1:1 – 1 row matches 1 row
+M:m – not recommended
+Incremental refresh
+
+
+•  Filters are applied by the report designer and can be at visual, page, or report level.
+•  Slicers are interactive visuals that let users filter data themselves.
+•  Both achieve filtering, but slicers provide user control, while filters provide report control.
+
+Power BI
+
+Familiar with Direct Lake to connect fabric onelake data to power bi
+Direct query and import are two other ways
+
+Power query m (Table.RenameColumns, Table.TransformColumnTypes),for etl - like clean, deduplicate, add cols etc. might not be needed if done in fabric
+
+Data modelling - Semantic modelling - Fact and dimension tables, star schema for faster querying, reducing complexity, compression etc, cardinality, relationships are defined between fact and dimension tables using keys - primary, foreign, date table(dimension table) for time intelligence - yoy- •	SAMEPERIODLASTYEAR() , ytd, mtd - •	TOTALYTD(), TOTALMTD(), ..
+
+dimension table has primary keys, fact table has foreign keys
+
+DAX queries - as measures(calculated during query time). .to filter, calculate, aggregate etc., stored columns are also possible but it increases model size
+
+Reports are built on top of it to communicate insights
+
+
+A hierarchy defines a drill path from higher-level to lower-level attributes.
+Date Hierarchy: Year → Quarter → Month → Day
+Geography: Country → State → City
+Product: Category → Subcategory → Product
+Hierarchies improve UX and make drill-down analysis easy.
+
+It is the business layer in Power BI where you add measures, hierarchies, KPIs, and metadata to make raw data analytics-ready.
+Business logic is implemented using DAX measures that define KPIs, calculations, and rules your business uses—like revenue, YoY growth, churn, or conversion rate.
+They allow drill-down analysis and improve navigation (e.g., Year → Quarter → Month).
+They help users explore data easily without writing DAX.
+
+Data types, formats, display folders, descriptions, sort by column, and default aggregation.
+This makes the model self-explanatory for business users.
+Metadata: data type, descriptions, formats
+A KPI is a measurable value that tells whether performance is good, bad, or needs attention.
+
+
